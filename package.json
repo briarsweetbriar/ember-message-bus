@@ -1,7 +1,7 @@
 {
   "name": "ember-message-bus",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "A simple message bus for Ember.js.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "",
+  "repository": "https://github.com/null-null-null/ember-message-bus",
   "engines": {
     "node": ">= 0.10.0"
   },
