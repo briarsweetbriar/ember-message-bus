@@ -5,11 +5,11 @@
 
 While Ember's routes and components are highly event-driven, this pattern does not extend to services, which must be tightly coupled to the components and other services that interface with them. With `ember-message-bus`, we can loosen that coupling by allowing those interactions to also be event-driven.
 
-## installation
+## Installation
 
 `ember install ember-message-bus`
 
-## usage
+## Usage
 
 First, add the `BusPublisherMixin` to something (such as a component, route, or service):
 
