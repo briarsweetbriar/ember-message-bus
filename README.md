@@ -3,7 +3,7 @@
 
 # ember-message-bus
 
-In many ways, Ember is an event driven framework, especially in the way that components communicate with each other. This does not extend to services, however, which must be tightly coupled to the components and other services that interface with them. With `ember-message-bus`, we can loosen that coupling by allowing those interactions to also be event driven.
+While Ember's routes and components are highly event-driven, this pattern does not extend to services, which must be tightly coupled to the components and other services that interface with them. With `ember-message-bus`, we can loosen that coupling by allowing those interactions to also be event-driven.
 
 ## installation
 
@@ -22,15 +22,13 @@ export default Ember.Service.extend(BusPublisherMixin, {
 });
 ```
 
-Next, send messages to the message bus with `trigger`:
+Next, send messages to the message bus with `publish`:
 
 ```js
 export default Ember.Service.extend(BusPublisherMixin, {
-  actions: {
-    valueWasEntered(value) {
-      this.trigger('userDidSubmitValue', value);
-    }
-  }
+  serviceBootup: on('init', function() {
+    this.publish('serviceBooted', this);
+  })
 });
 ```
 
@@ -41,10 +39,10 @@ import Ember from 'ember';
 import { BusSubscriberMixin } from 'ember-message-bus';
 
 export default Ember.Service.extend(BusSubscriberMixin, {
-  values: Ember.computed(() => Ember.A()),
+  services: Ember.computed(() => Ember.A()),
 
-  addValue: on('userDidSubmitValue', function(value) {
-    this.get('values').pushObject(value);
+  addService: on('serviceBooted', function(service) {
+    this.get('services').pushObject(service);
   })
 });
 ```
