@@ -26,9 +26,11 @@ Next, send messages to the message bus with `publish`:
 
 ```js
 export default Ember.Service.extend(BusPublisherMixin, {
-  serviceBootup: on('init', function() {
+  init() {
     this.publish('serviceBooted', this);
-  })
+
+    this._super();
+  }
 });
 ```
 

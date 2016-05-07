@@ -2,12 +2,13 @@ import Ember from 'ember';
 import { BusPublisherMixin } from 'ember-message-bus';
 
 const {
-  Component,
-  on
+  Component
 } = Ember;
 
 export default Component.extend(BusPublisherMixin, {
-  setValue: on('init', function() {
+  init() {
     this.publish('setValue', 1);
-  })
+
+    this._super();
+  }
 });
