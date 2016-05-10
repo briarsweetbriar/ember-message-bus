@@ -17,7 +17,9 @@ First, add the `BusPublisherMixin` to something (such as a component, route, or 
 import Ember from 'ember';
 import { BusPublisherMixin } from 'ember-message-bus';
 
-export default Ember.Service.extend(BusPublisherMixin, {
+const { Service } = Ember;
+
+export default Service.extend(BusPublisherMixin, {
 
 });
 ```
@@ -25,7 +27,7 @@ export default Ember.Service.extend(BusPublisherMixin, {
 Next, send messages to the message bus with `publish`:
 
 ```js
-export default Ember.Service.extend(BusPublisherMixin, {
+export default Service.extend(BusPublisherMixin, {
   init() {
     this.publish('serviceBooted', this);
 
@@ -40,10 +42,12 @@ Finally, add the `BusSubscriberMixin` to anything that you want to listen for th
 import Ember from 'ember';
 import { BusSubscriberMixin } from 'ember-message-bus';
 
-export default Ember.Service.extend(BusSubscriberMixin, {
-  services: Ember.computed(() => Ember.A()),
+const { Service, computed, on } = Ember;
 
-  addService: Ember.on('serviceBooted', function(service) {
+export default Service.extend(BusSubscriberMixin, {
+  services: computed(() => Ember.A()),
+
+  addService: on('serviceBooted', function(service) {
     this.get('services').pushObject(service);
   })
 });
