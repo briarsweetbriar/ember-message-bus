@@ -43,7 +43,7 @@ import { BusSubscriberMixin } from 'ember-message-bus';
 export default Ember.Service.extend(BusSubscriberMixin, {
   services: Ember.computed(() => Ember.A()),
 
-  addService: on('serviceBooted', function(service) {
+  addService: Ember.on('serviceBooted', function(service) {
     this.get('services').pushObject(service);
   })
 });
