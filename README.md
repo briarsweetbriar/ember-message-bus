@@ -51,10 +51,10 @@ export default Ember.Service.extend(BusSubscriberMixin, {
 
 ### Testing
 
-It's easy to test if a message is published. First, run `initializeQUnit`:
+It's easy to test if a message is published. First, run `initializeQUnitAssertions`:
 
 ```js
-import { initializeQUnit } from 'ember-message-bus';
+import { initializeQUnitAssertions } from 'ember-message-bus';
 
 moduleForComponent('my-component', 'Integration | Component | my component', {
   integration: true,
@@ -62,24 +62,24 @@ moduleForComponent('my-component', 'Integration | Component | my component', {
   beforeEach() {
     const appInstance = getOwner(this);
 
-    initializeQUnit(appInstance);
+    initializeQUnitAssertions(appInstance);
   }
 });
 ```
 
-If you'd like to ensure that events are published, use the Qunit assertion `published` like so:
+If you'd like to ensure that events are published, use the Qunit assertion `willPublish` like so:
 
 ```js
-assert.published('shouldBeTriggered', '`shouldBeTriggered` was triggered');
-assert.published('shouldReceiveArgs', ['foo', arg2], '`shouldReceiveArgs` received the correct args');
+assert.willPublish('shouldBeTriggered', '`shouldBeTriggered` was triggered');
+assert.willPublish('shouldReceiveArgs', ['foo', arg2], '`shouldReceiveArgs` received the correct args');
 ```
 
 Note that if you want to test that args are published, the expected args should be passed in as an array.
 
-On the other end, if you want to confirm that a message was not published, you can use `notPublished`:
+On the other end, if you want to confirm that a message was not published, you can use `willNotPublish`:
 
 ```js
-assert.notPublished('thisMessageShouldNotBePublished', '`thisMessageShouldNotBePublished` was not published');
+assert.willNotPublish('thisMessageShouldNotBePublished', '`thisMessageShouldNotBePublished` was not published');
 ```
 
 Note that in both cases, these assertions should be made _before_ the message is actually published. So in a component integration test:
@@ -89,7 +89,7 @@ const foo = { bar: 'baz' };
 
 this.set('foo', foo);
 
-assert.published('shouldBeTriggered', [foo], '`shouldBeTriggered` was triggered');
+assert.willPublish('shouldBeTriggered', [foo], '`shouldBeTriggered` was triggered');
 
 this.render(hbs`{{my-component foo=foo}}`);
 ```

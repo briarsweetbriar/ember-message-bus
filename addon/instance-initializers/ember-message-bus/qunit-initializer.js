@@ -16,7 +16,7 @@ export function initialize(appInstance) {
   appInstance.register('ember-message-bus:subscriber', Subscriber, { instantiate: false });
 
   QUnit.extend(QUnit.assert, {
-    published: function(trigger, expectedOrMessage, onlyMessage) {
+    willPublish: function(trigger, expectedOrMessage, onlyMessage) {
       const pushResult = (result, actual, expected, message) => {
         this.pushResult({
           actual,
@@ -41,7 +41,7 @@ export function initialize(appInstance) {
       }).create();
     },
 
-    notPublished: function(trigger, message) {
+    willNotPublish: function(trigger, message) {
       const context = this;
 
       appInstance.lookup('ember-message-bus:subscriber').extend({

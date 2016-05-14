@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import destroyApp from '../../../helpers/destroy-app';
-import { initializeQUnit } from 'ember-message-bus';
+import { initializeQUnitAssertions } from 'ember-message-bus';
 
 module('Unit | Instance Initializer | ember message bus/qunit initializer', {
   beforeEach: function() {
@@ -16,18 +16,18 @@ module('Unit | Instance Initializer | ember message bus/qunit initializer', {
   }
 });
 
-test('`published` is added to Qunit.assert', function(assert) {
+test('`willPublish` is added to Qunit.assert', function(assert) {
   assert.expect(1);
 
-  initializeQUnit(this.appInstance);
+  initializeQUnitAssertions(this.appInstance);
 
-  assert.ok(QUnit.assert.published, 'function is present');
+  assert.ok(QUnit.assert.willPublish, 'function is present');
 });
 
-test('`notPublished` is added to Qunit.assert', function(assert) {
+test('`willNotPublish` is added to Qunit.assert', function(assert) {
   assert.expect(1);
 
-  initializeQUnit(this.appInstance);
+  initializeQUnitAssertions(this.appInstance);
 
-  assert.ok(QUnit.assert.notPublished, 'function is present');
+  assert.ok(QUnit.assert.willNotPublish, 'function is present');
 });
