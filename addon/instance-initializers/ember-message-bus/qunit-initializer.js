@@ -30,7 +30,7 @@ export function initialize(appInstance) {
         triggerMethod: on(trigger, function(...args) {
           if (typeOf(expectedOrMessage) === 'array') {
             const result = args.every((arg, index) => {
-              return arg === expectedOrMessage[index];
+              return QUnit.equiv(arg, expectedOrMessage[index]);
             });
 
             pushResult(result, args, expectedOrMessage, onlyMessage);
