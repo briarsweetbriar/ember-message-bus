@@ -8,6 +8,16 @@ const {
   typeOf
 } = Ember;
 
+const resolveCallback = function resolveCallback(callback, args) {
+  return callback(...args);
+};
+
+const resolveEquiv = function resolveEquiv(expected, args) {
+  return args.every((arg, index) => {
+    return QUnit.equiv(arg, expected[index]);
+  });
+};
+
 export function initialize(appInstance) {
   if (get(config, 'environment') !== 'test' || !QUnit) { return; }
 
@@ -28,14 +38,14 @@ export function initialize(appInstance) {
 
       appInstance.lookup('ember-message-bus:subscriber').extend({
         triggerMethod: on(trigger, function(...args) {
-          if (typeOf(expectedOrMessage) === 'array') {
-            const result = args.every((arg, index) => {
-              return QUnit.equiv(arg, expectedOrMessage[index]);
-            });
+          if (typeOf(expectedOrMessage) === 'string') {
+            pushResult(true, true, true, expectedOrMessage);
+          } else {
+            const result = typeOf(expectedOrMessage) === 'function' ?
+              resolveCallback(expectedOrMessage, args) :
+              resolveEquiv(expectedOrMessage, args);
 
             pushResult(result, args, expectedOrMessage, onlyMessage);
-          } else {
-            pushResult(true, true, true, expectedOrMessage);
           }
         })
       }).create();

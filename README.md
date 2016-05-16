@@ -72,9 +72,10 @@ If you'd like to ensure that events are published, use the Qunit assertion `will
 ```js
 assert.willPublish('shouldBeTriggered', '`shouldBeTriggered` was triggered');
 assert.willPublish('shouldReceiveArgs', ['foo', arg2], '`shouldReceiveArgs` received the correct args');
+assert.willPublish('shouldCallback', (param1, param2) => return param2 === arg2, '`shouldCallback` tested with callback');
 ```
 
-Note that if you want to test that args are published, the expected args should be passed in as an array.
+Note that if you want to test that args are published, the expected args should be passed in as an array. Alternatively, you can provide a callback that will receive the args as their params.
 
 On the other end, if you want to confirm that a message was not published, you can use `willNotPublish`:
 
