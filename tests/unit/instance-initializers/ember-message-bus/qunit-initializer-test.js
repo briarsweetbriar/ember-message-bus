@@ -3,6 +3,8 @@ import { module, test } from 'qunit';
 import destroyApp from '../../../helpers/destroy-app';
 import { initializeQUnitAssertions } from 'ember-message-bus';
 
+debugger
+
 module('Unit | Instance Initializer | ember message bus/qunit initializer', {
   beforeEach: function() {
     Ember.run(() => {

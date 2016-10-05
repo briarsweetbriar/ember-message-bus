@@ -1,9 +1,7 @@
 import Ember from 'ember';
-import config from 'ember-get-config';
 import { BusSubscriberMixin } from 'ember-message-bus';
 
 const {
-  get,
   on,
   typeOf
 } = Ember;
@@ -19,7 +17,7 @@ const resolveEquiv = function resolveEquiv(expected, args) {
 };
 
 export function initialize(appInstance) {
-  if (get(config, 'environment') !== 'test' || !QUnit) { return; }
+  if (!QUnit) { return; }
 
   const Subscriber = Ember.Object.extend(BusSubscriberMixin);
 
