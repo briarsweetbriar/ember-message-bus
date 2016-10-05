@@ -1,12 +1,13 @@
 language: node_js
 node_js:
-- '0.12'
+- '4'
 sudo: false
 cache:
   directories:
   - node_modules
 env:
 - EMBER_TRY_SCENARIO=default
+- EMBER_TRY_SCENARIO=ember-1.13
 - EMBER_TRY_SCENARIO=ember-release
 - EMBER_TRY_SCENARIO=ember-beta
 - EMBER_TRY_SCENARIO=ember-canary
@@ -15,20 +16,21 @@ matrix:
   allow_failures:
   - env: EMBER_TRY_SCENARIO=ember-canary
 before_install:
-- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
 - npm config set spin false
-- npm install -g npm@^2
-install:
 - npm install -g bower
+- bower --version
+- npm install phantomjs-prebuilt
+- node_modules/phantomjs-prebuilt/bin/phantomjs --version
+install:
 - npm install
 - bower install
 script:
-- ember try $EMBER_TRY_SCENARIO test
+- ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
 deploy:
   provider: npm
-  email: null@ember.theater
+  email: null@affinitygamescollective.org
   api_key:
-    secure: LG/4WUMy+LbPjkl+A7PNXLyrKk6YrrPbpKfxHD2rKBR4piX2RMRIJI9g/5lFy8FGGkrOFd/UL3242C1qTN+7R94RoonQ2qA3a5cUupqgcR7baQdcLpxcqJmsUyACzKbDVAJtwUKMZRpdeMT39PLyM8lxQL16ntPKxTYHjD7Y3Jw6/HEEbzj9mwvapYsf1j5+29BvknCR6jCnDK2tUScQybo1q94aJwVIQGa6fyA+E2f5WMQ7kjeBhHgCza2urwjpnGF64jOgaeN35P6Xvour/88w16lfKmYS7deo4BUmqQ7lZ242y0pmGRrlj8gohlbG9JYDMNSUYJM4+4iEscoRzBRPHvl9p36gfrxG6CTs9xlEAPFuj7njsC9VHqnCJ+8MQYjDSP5LvhbsX2pa3yn2e6K3YWb2h8bSjfUOQRq4t0od66JDI+SXFI+aUsznAomcGzT5LUQmK05WUdcvVfTjuTUuPjwvfSYT6JTi5iD7VQjxC63esgHechmZ8mmOK+RGPuy0e0AjkF2OzF9TAx+1CGC3QYqPe5x9tI9lVmE7/VkqMsXdp4/Hwwj70MFs1vxJN4xuxPzyBftGNZimAZ5xIQVqzZleQHNh41f+Nb1G24BmhlMqxoJUfbu/cBdht/0msReF29bhXdkAKc+N+deqrDOsDeleTlOOcXelQ3yGaeM=
+    secure: xNT4ZSlk9TWaC6PsnlIDqFx3HXFB48Tt2dRQ5jRDxGgQVfRSIHhRzgn3ziE54ILe2lg0omvuv0PvqTa89jIyqPYMyPSkFZvo764kZOd1mczIHlKHSagthqU1mpvPnPxLJRj4v9TL3TX6d5ZcGEsFuG8GIPuIlV3ega5PCSHIIMogq9LV/k3QaDAhWuJAHgrFSEjO4B5TqImvPVIPTOcBfh/DylA71SihxTPQ2ToEPzkHAdtuWIubfovy5J/I4nsFuK+UWuLNxmdRNMalRBRcAaWU9dNEtMbNhyd8Kl2Ms1uAbi/TgTwrd0gSVO6dWfa6edvZPztc18Im9MCsIPEVO250ixJdTxImugyJgbDF2QMIBLkTed/yaayLMppfEqrpBiWST95l9SsjfB16rzCl6YN9MiNa1VR3AXpbW8oBIwFTRxKbSqHXGDCiqs71gd3ucFULMZBK+79hwQN8CLJiQFpPPH2D5DTEK2vTh1C3qSrDn5nDuwxzrMs1t7zm9LY/eyA5EOpfcGecVAYyX9hcLUXZCb7V3xT62USw94m1+MpxpoD5GF19q7MP+kmorU9n2OGgdh03G1Xmb7iKFKCfW4Kq8ycnGYOXMgdBUe4xYM8u1q/QJIRfrxVpWxRVhBfdra9RFEnMQhDZOBVMwFVwFoXTz2hQ+Knw4h0ak6eXGr4=
   on:
     tags: true
     repo: null-null-null/ember-message-bus
