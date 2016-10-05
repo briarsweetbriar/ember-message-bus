@@ -3,14 +3,17 @@ import { BusSubscriberMixin } from 'ember-message-bus';
 
 const {
   Component,
-  on,
   set
 } = Ember;
 
 export default Component.extend(BusSubscriberMixin, {
   value: null,
 
-  setValue: on('didSetValue', function(value) {
-    set(this, 'value', value);
-  })
+  init(...args) {
+    this._super(...args);
+
+    this.subscribe('setValue', this, (value) => {
+      set(this, 'value', value);
+    });
+  }
 });

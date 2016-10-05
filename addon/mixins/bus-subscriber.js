@@ -3,8 +3,7 @@ import Ember from 'ember';
 const {
   Evented,
   Mixin,
-  get,
-  on
+  get
 } = Ember;
 
 const { inject: { service } } = Ember;
@@ -12,13 +11,23 @@ const { inject: { service } } = Ember;
 export default Mixin.create(Evented, {
   messageBus: service('message-bus'),
 
-  init() {
-    get(this, 'messageBus').register(this);
+  willDestroyElement(...attrs) {
+    this._super(...attrs);
 
-    this._super();
+    get(this, 'messageBus').unsubscribeAll(this);
   },
 
-  unregisterWithBus: on('willDestroy', 'willDestroyElement', function() {
-    get(this, 'messageBus').unregister(this);
-  })
+  willDestroy(...attrs) {
+    this._super(...attrs);
+
+    get(this, 'messageBus').unsubscribeAll(this);
+  },
+
+  subscribe(name, context, callback) {
+    get(this, 'messageBus').subscribe(name, context, callback);
+  },
+
+  unsuscribe(name, context, callback) {
+    get(this, 'messageBus').unsubscribe(name, context, callback);
+  }
 });
