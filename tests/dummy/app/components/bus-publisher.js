@@ -6,9 +6,9 @@ const {
 } = Ember;
 
 export default Component.extend(BusPublisherMixin, {
-  init() {
-    this.publish('setValue', 1);
+  didRender(...args) {
+    this._super(...args);
 
-    this._super();
+    Ember.run.next(() => this.publish('didSetValue', 1));
   }
 });
