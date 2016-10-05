@@ -20,14 +20,14 @@ function findRoot(current) {
 module.exports = {
   name: 'ember-message-bus',
 
-  // treeForAddon: function() {
-  //   var addonDir = path.join(__dirname, 'addon');
-  //   if (findRoot(this).project.config(process.env.EMBER_ENV)['environment'] === 'test') {
-  //     fs.createReadStream(path.join(addonDir, 'index-for-test.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
-  //   } else {
-  //     fs.createReadStream(path.join(addonDir, 'index-for-nontest.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
-  //   }
-  //
-  //   return this._super.treeForAddon.apply(this, arguments);
-  // }
+  treeForAddon: function() {
+    var addonDir = path.join(__dirname, 'addon');
+    if (findRoot(this).project.config(process.env.EMBER_ENV)['environment'] === 'test') {
+      fs.createReadStream(path.join(addonDir, 'indexes/test.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+    } else {
+      fs.createReadStream(path.join(addonDir, 'indexes/default.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+    }
+
+    return this._super.treeForAddon.apply(this, arguments);
+  }
 };
