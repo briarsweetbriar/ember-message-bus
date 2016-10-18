@@ -3,29 +3,34 @@
 
 var fs = require('fs');
 var path = require('path');
-var count = 0;
 
-function findRoot(current) {
-  var app;
+function createFolder(path) {
+  try {
+    fs.statSync(path);
+  } catch(e) {
+    fs.mkdirSync(path);
+  }
+}
 
-  // Keep iterating upward until we don't have a grandparent.
-  // Has to do this grandparent check because at some point we hit the project.
-  do {
-    app = current.app || app;
-  } while (current.parent && current.parent.parent && (current = current.parent));
-
-  return app;
+function deleteFile(path) {
+  try {
+    fs.unlinkSync(path);
+  } catch(e) {}
 }
 
 module.exports = {
   name: 'ember-message-bus',
 
   treeForAddon: function() {
+    var vendorDir = path.join(__dirname, 'vendor');
     var addonDir = path.join(__dirname, 'addon');
-    if (findRoot(this).project.config(process.env.EMBER_ENV)['environment'] === 'test') {
-      fs.createReadStream(path.join(addonDir, 'indexes/test.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+    if (process.env.EMBER_ENV === 'test') {
+      createFolder(path.join(addonDir, 'instance-initializers'));
+      fs.createReadStream(path.join(vendorDir, 'instance-initializers/qunit-initializer.js')).pipe(fs.createWriteStream(path.join(addonDir, 'instance-initializers/qunit-initializer.js')));
+      fs.createReadStream(path.join(vendorDir, 'indexes/test.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
     } else {
-      fs.createReadStream(path.join(addonDir, 'indexes/default.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+      deleteFile(path.join(addonDir, 'instance-initializers/qunit-initializer.js'));
+      fs.createReadStream(path.join(vendorDir, 'indexes/default.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
     }
 
     return this._super.treeForAddon.apply(this, arguments);

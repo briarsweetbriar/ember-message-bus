@@ -17,3 +17,4 @@ npm-debug.log
 testem.log
 
 /addon/index.js
+/addon/instance-initializers/qunit-initializer.js
