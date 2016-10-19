@@ -4,6 +4,7 @@ import { moduleFor, test } from 'ember-qunit';
 moduleFor('service:message-bus', 'Unit | Service | message bus', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
+  integration: true
 });
 
 test('`publish` calls the `callback` on all subscribers', function(assert) {
@@ -11,13 +12,13 @@ test('`publish` calls the `callback` on all subscribers', function(assert) {
 
   const service = this.subject();
 
-  const object = Ember.Component.create({
+  const object = Ember.Route.create({
     callFoo(...messages) {
       assert.deepEqual(messages, ['bar', 'baz'], 'messages are passed through to object');
     }
   });
 
-  const object2 = Ember.Component.create({
+  const object2 = Ember.Route.create({
     callFoo(...messages) {
       assert.deepEqual(messages, ['bar', 'baz'], 'messages are passed through to object2');
     }
@@ -38,17 +39,17 @@ test('`publish`ed objects will unsubscribe themselves upon destruction', functio
 
   const cb = function() {};
 
-  const component = Ember.Component.create();
-  const router = Ember.Router.create();
-  const componentStable = Ember.Component.create();
+  const route1 = Ember.Route.create();
+  const route2 = Ember.Route.create();
+  const routeStable = Ember.Route.create();
 
-  service.subscribe('foo', component, cb);
-  service.subscribe('foo', router, cb);
-  service.subscribe('foo', componentStable, cb);
+  service.subscribe('foo', route1, cb);
+  service.subscribe('foo', route2, cb);
+  service.subscribe('foo', routeStable, cb);
 
   Ember.run(() => {
-    component.trigger('willDestroyElement');
-    router.trigger('willDestroy');
+    route1.trigger('willDestroyElement');
+    route2.trigger('willDestroy');
   });
 
   Ember.run.later(() => {
@@ -66,8 +67,8 @@ test('`unsubscribe` removes all subscriptions with the provided context and call
   const cb1 = function() {};
   const cb2 = function() {};
 
-  const context1 = Ember.Component.create();
-  const context2 = Ember.Component.create();
+  const context1 = Ember.Route.create();
+  const context2 = Ember.Route.create();
 
   service.subscribe('foo', context1, cb1);
   service.subscribe('foo', context1, cb2);
@@ -88,8 +89,8 @@ test('`unsubscribe` removes all subscriptions with the provided context if no ca
   const cb1 = function() {};
   const cb2 = function() {};
 
-  const context1 = Ember.Component.create();
-  const context2 = Ember.Component.create();
+  const context1 = Ember.Route.create();
+  const context2 = Ember.Route.create();
 
   service.subscribe('foo', context1, cb1);
   service.subscribe('foo', context1, cb2);
@@ -110,8 +111,8 @@ test('`unsubscribeAll` removes all subscriptions for the provided context', func
   const cb1 = function() {};
   const cb2 = function() {};
 
-  const context1 = Ember.Component.create();
-  const context2 = Ember.Component.create();
+  const context1 = Ember.Route.create();
+  const context2 = Ember.Route.create();
 
   service.subscribe('foo', context1, cb1);
   service.subscribe('foo', context1, cb2);

@@ -17,7 +17,7 @@ const resolveEquiv = function resolveEquiv(expected, args) {
 export function initialize(appInstance) {
   if (!QUnit) { return; }
 
-  const Subscriber = Ember.Component.extend({
+  const Subscriber = Ember.Object.extend(Ember.Evented, {
     messageBus: Ember.inject.service('message-bus')
   });
 
