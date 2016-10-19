@@ -27,10 +27,10 @@ module.exports = {
     if (process.env.EMBER_ENV === 'test') {
       createFolder(path.join(addonDir, 'instance-initializers'));
       fs.createReadStream(path.join(vendorDir, 'instance-initializers/qunit-initializer.js')).pipe(fs.createWriteStream(path.join(addonDir, 'instance-initializers/qunit-initializer.js')));
-      fs.createReadStream(path.join(vendorDir, 'indexes/test.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+      fs.createReadStream(path.join(vendorDir, 'indexes/index.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
     } else {
       deleteFile(path.join(addonDir, 'instance-initializers/qunit-initializer.js'));
-      fs.createReadStream(path.join(vendorDir, 'indexes/default.js')).pipe(fs.createWriteStream(path.join(addonDir, 'index.js')));
+      deleteFile(path.join(addonDir, 'index.js'));
     }
 
     return this._super.treeForAddon.apply(this, arguments);

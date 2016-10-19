@@ -1,14 +1,18 @@
 import Ember from 'ember';
-import { BusPublisherMixin } from 'ember-message-bus';
 
 const {
-  Component
+  Component,
+  get
 } = Ember;
 
-export default Component.extend(BusPublisherMixin, {
+const { inject: { service } } = Ember;
+
+export default Component.extend({
+  messageBus: service('message-bus'),
+
   didRender(...args) {
     this._super(...args);
 
-    Ember.run.next(() => this.publish('didSetValue', 1));
+    Ember.run.next(() => get(this, 'messageBus').publish('didSetValue', 1));
   }
 });

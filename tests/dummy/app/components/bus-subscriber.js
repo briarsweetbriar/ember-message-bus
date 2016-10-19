@@ -1,19 +1,25 @@
 import Ember from 'ember';
-import { BusSubscriberMixin } from 'ember-message-bus';
 
 const {
   Component,
+  get,
   set
 } = Ember;
 
-export default Component.extend(BusSubscriberMixin, {
+const { inject: { service } } = Ember;
+
+export default Component.extend({
   value: null,
+
+  messageBus: service('message-bus'),
 
   init(...args) {
     this._super(...args);
 
-    this.subscribe('setValue', this, (value) => {
-      set(this, 'value', value);
-    });
+    get(this, 'messageBus').subscribe('didSetValue', this, this.setValue);
+  },
+
+  setValue(value) {
+    set(this, 'value', value);
   }
 });

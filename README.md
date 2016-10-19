@@ -3,7 +3,7 @@
 
 # ember-message-bus
 
-While Ember's routes and components are highly event-driven, this pattern does not extend to services, which must be tightly coupled to the components and other services that interface with them. With `ember-message-bus`, we can loosen that coupling by allowing those interactions to also be event-driven.
+Explore new patterns of event-driven communication with `ember-message-bus`. This addon adds a simple service to your application, `message-bus`, which you can use to facilitate loosely coupled communications between services, components, and other Ember objects.
 
 ## Installation
 
@@ -11,43 +11,65 @@ While Ember's routes and components are highly event-driven, this pattern does n
 
 ## Usage
 
-First, add the `BusPublisherMixin` to something (such as a component, route, or service):
+First, inject the `message-bus` service into your object:
 
 ```js
 import Ember from 'ember';
-import { BusPublisherMixin } from 'ember-message-bus';
 
-export default Ember.Service.extend(BusPublisherMixin, {
-
+export default Ember.Component.extend({
+  messageBus: Ember.inject.service('message-bus')
 });
 ```
 
-Next, send messages to the message bus with `publish`:
+You may also want to include the `Ember.Evented` mixin, as some Ember objects (such as services and controllers) do not do so automatically. If you use `ember-message` on an object that is not evented, you'll get a warning in your console. Look out for these!
 
 ```js
-export default Ember.Service.extend(BusPublisherMixin, {
-  init() {
-    this.publish('serviceBooted', this);
+import Ember from 'ember';
 
-    this._super();
+export default Ember.Service.extend(Ember.Evented, {
+  messageBus: Ember.inject.service('message-bus')
+});
+```
+
+Once the `message-bus` has been injected, you can `subscribe` to events through it:
+
+```js
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  messageBus: Ember.inject.service('message-bus'),
+
+  init() {
+    this._super(...arguments);
+
+    this.get('messageBus').subscribe('my-event', this, this.doSomething);
+  },
+
+  doSomething(arg1, arg2) {
+    console.log(arg1 + arg2);
   }
 });
 ```
 
-Finally, add the `BusSubscriberMixin` to anything that you want to listen for these messages:
+`subscribe` expects three arguments: 1) the name of the event, 2) the context, typically `this`, and 3) the callback.
+
+Finally, you can `publish` events to trigger the subscription:
 
 ```js
 import Ember from 'ember';
-import { BusSubscriberMixin } from 'ember-message-bus';
 
-export default Ember.Service.extend(BusSubscriberMixin, {
-  services: Ember.computed(() => Ember.A()),
+export default Ember.Component.extend({
+  messageBus: Ember.inject.service('message-bus'),
 
-  addService: Ember.on('serviceBooted', function(service) {
-    this.get('services').pushObject(service);
-  })
+  action: {
+    click() {
+      this.get('messageBus').publish(1, 2);
+    }
+  }
 });
 ```
+
+You can pass as many arguments as you like into `publish`. These arguments will be handed to the subscribing callback.
 
 ### Testing
 

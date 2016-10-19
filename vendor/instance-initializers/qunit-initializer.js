@@ -1,8 +1,6 @@
 import Ember from 'ember';
-import { BusSubscriberMixin } from 'ember-message-bus';
 
 const {
-  on,
   typeOf
 } = Ember;
 
@@ -19,7 +17,9 @@ const resolveEquiv = function resolveEquiv(expected, args) {
 export function initialize(appInstance) {
   if (!QUnit) { return; }
 
-  const Subscriber = Ember.Object.extend(BusSubscriberMixin);
+  const Subscriber = Ember.Component.extend({
+    messageBus: Ember.inject.service('message-bus')
+  });
 
   appInstance.register('ember-message-bus:subscriber', Subscriber, { instantiate: false });
 
@@ -35,7 +35,13 @@ export function initialize(appInstance) {
       };
 
       appInstance.lookup('ember-message-bus:subscriber').extend({
-        triggerMethod: on(trigger, function(...args) {
+        init(...args) {
+          this._super(...args);
+
+          this.get('messageBus').subscribe(trigger, this, this.triggerMethod);
+        },
+
+        triggerMethod(...args) {
           if (typeOf(expectedOrMessage) === 'string') {
             pushResult(true, true, true, expectedOrMessage);
           } else {
@@ -45,7 +51,7 @@ export function initialize(appInstance) {
 
             pushResult(result, args, expectedOrMessage, onlyMessage);
           }
-        })
+        }
       }).create();
     },
 
@@ -53,14 +59,20 @@ export function initialize(appInstance) {
       const context = this;
 
       appInstance.lookup('ember-message-bus:subscriber').extend({
-        triggerMethod: on(trigger, function() {
+        init(...args) {
+          this._super(...args);
+
+          this.get('messageBus').subscribe(trigger, this, this.triggerMethod);
+        },
+
+        triggerMethod() {
           context.pushResult({
             result: false,
             actual: false,
             expected: true,
             message
           });
-        })
+        }
       }).create();
     }
   });
