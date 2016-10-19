@@ -21,16 +21,6 @@ export default Ember.Component.extend({
 });
 ```
 
-You may also want to include the `Ember.Evented` mixin, as some Ember objects (such as services and controllers) do not do so automatically. If you use `ember-message` on an object that is not evented, you'll get a warning in your console. Look out for these!
-
-```js
-import Ember from 'ember';
-
-export default Ember.Service.extend(Ember.Evented, {
-  messageBus: Ember.inject.service('message-bus')
-});
-```
-
 Once the `message-bus` has been injected, you can `subscribe` to events through it:
 
 ```js
@@ -70,6 +60,20 @@ export default Ember.Component.extend({
 ```
 
 You can pass as many arguments as you like into `publish`. These arguments will be handed to the subscribing callback.
+
+### `Ember.Evented`
+
+You may need to include the `Ember.Evented` mixin, as some Ember objects (such as services and controllers) do not do so automatically. If you use `ember-message-bus` on an object that is not evented, you'll get a warning in your console.
+
+```js
+import Ember from 'ember';
+
+export default Ember.Service.extend(Ember.Evented, {
+  messageBus: Ember.inject.service('message-bus')
+});
+```
+
+The message bus will work, even when used by Ember objects without `Ember.Evented`. However, failing to include `Ember.Evented` could lead to performance degradation as `ember-message-bus` relies on the `willDestroy` and `willDestroyElement` events to properly teardown subscriptions.
 
 ### Testing
 
