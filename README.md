@@ -53,13 +53,13 @@ export default Ember.Component.extend({
 
   action: {
     click() {
-      this.get('messageBus').publish(1, 2);
+      this.get('messageBus').publish('my-event', 1, 2);
     }
   }
 });
 ```
 
-You can pass as many arguments as you like into `publish`. These arguments will be handed to the subscribing callback.
+`publish` expects one or more arguments. The first argument must be the name of the event. After that, you can pass as many arguments as you like into `publish`. These arguments will be handed to the subscribing callback.
 
 ### `Ember.Evented`
 
