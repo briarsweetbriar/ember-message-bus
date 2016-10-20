@@ -1,6 +1,6 @@
 {
   "name": "ember-message-bus",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A simple message bus for Ember.js.",
   "directories": {
     "doc": "doc",
