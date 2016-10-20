@@ -5,35 +5,31 @@ const {
   computed,
   get,
   isBlank,
-  set,
-  typeOf
+  isNone,
+  set
 } = Ember;
-
-const { Logger: { warn } } = Ember;
 
 export default Service.extend({
   _subscriptionMap: computed(() => { return {}; }),
 
   publish(name, ...messages) {
+    const markedForCleanup = [];
+
     (get(this, `_subscriptionMap.${name}`) || []).forEach((subscription) => {
+      if (isNone(subscription.context) || get(subscription.context, 'isDestroyed')) {
+        return markedForCleanup.push(subscription.context);
+      }
+
       subscription.callback.apply(subscription.context, messages);
     });
+
+    markedForCleanup.forEach((context) => this.unsubscribe(name, context));
   },
 
   subscribe(name, context, callback) {
     const subscriptions = get(this, `_subscriptionMap.${name}`) || set(this, `_subscriptionMap.${name}`, []);
 
     subscriptions.push({ callback, context });
-
-    if (typeOf(context.on) !== 'function') { return warn(`You subscribed the context ${context} to the message '${name}', but the context does not support events. Please add the \`Ember.Evented\` mixin to the context so that \`ember-message-bus\` can properly remove listeners when the context is destroyed.`); }
-
-    context.on('willDestroy', () => {
-      this.unsubscribe(name, context, callback);
-    });
-
-    context.on('willDestroyElement', () => {
-      this.unsubscribe(name, context, callback);
-    });
   },
 
   unsubscribe(name, context, callback) {

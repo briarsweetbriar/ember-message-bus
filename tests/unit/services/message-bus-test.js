@@ -30,7 +30,7 @@ test('`publish` calls the `callback` on all subscribers', function(assert) {
   service.publish('foo', 'bar', 'baz');
 });
 
-test('`publish`ed objects will unsubscribe themselves upon destruction', function(assert) {
+test('`subscribed`ed objects will unsubscribe themselves if destroyed, upon next `publish`', function(assert) {
   assert.expect(1);
 
   const done = assert.async();
@@ -48,11 +48,12 @@ test('`publish`ed objects will unsubscribe themselves upon destruction', functio
   service.subscribe('foo', routeStable, cb);
 
   Ember.run(() => {
-    route1.trigger('willDestroyElement');
-    route2.trigger('willDestroy');
+    route1.destroy();
+    route2.destroy();
   });
 
   Ember.run.later(() => {
+    service.publish('foo');
     assert.equal(service.get('_subscriptionMap.foo.length'), 1, 'destroyed registrants removed');
 
     done();
