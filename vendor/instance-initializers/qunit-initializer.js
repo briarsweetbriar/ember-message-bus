@@ -17,11 +17,7 @@ const resolveEquiv = function resolveEquiv(expected, args) {
 export function initialize(appInstance, name = 'messageBus', SubscriberArg = '') {
   if (!QUnit) { return; }
 
-  const mixin = {};
-
-  mixin[name] = Ember.inject.service('message-bus');
-
-  const Subscriber = Ember.isPresent(SubscriberArg) ? SubscriberArg : Ember.Object.extend(mixin);
+  const Subscriber = Ember.isPresent(SubscriberArg) ? SubscriberArg : Ember.Object.extend({ messageBus: Ember.inject.service('message-bus') });
 
   appInstance.register('ember-message-bus:subscriber', Subscriber, { instantiate: false });
 
