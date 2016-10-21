@@ -14,12 +14,14 @@ const resolveEquiv = function resolveEquiv(expected, args) {
   });
 };
 
-export function initialize(appInstance) {
+export function initialize(appInstance, name = 'messageBus', SubscriberArg = '') {
   if (!QUnit) { return; }
 
-  const Subscriber = Ember.Object.extend({
-    messageBus: Ember.inject.service('message-bus')
-  });
+  const mixin = {};
+
+  mixin[name] = Ember.inject.service('message-bus');
+
+  const Subscriber = Ember.isPresent(SubscriberArg) ? SubscriberArg : Ember.Object.extend(mixin);
 
   appInstance.register('ember-message-bus:subscriber', Subscriber, { instantiate: false });
 
@@ -38,7 +40,7 @@ export function initialize(appInstance) {
         init(...args) {
           this._super(...args);
 
-          this.get('messageBus').subscribe(trigger, this, this.triggerMethod);
+          this.get(name).subscribe(trigger, this, this.triggerMethod);
         },
 
         triggerMethod(...args) {
@@ -62,7 +64,7 @@ export function initialize(appInstance) {
         init(...args) {
           this._super(...args);
 
-          this.get('messageBus').subscribe(trigger, this, this.triggerMethod);
+          this.get(name).subscribe(trigger, this, this.triggerMethod);
         },
 
         triggerMethod() {
