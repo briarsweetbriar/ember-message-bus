@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import QUnit from 'qunit';
 import { module, test } from 'qunit';
 import destroyApp from '../../../helpers/destroy-app';
 import { initializeQUnitAssertions } from 'ember-message-bus';
