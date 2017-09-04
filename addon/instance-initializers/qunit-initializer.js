@@ -17,7 +17,9 @@ const resolveEquiv = function resolveEquiv(expected, args) {
 export function initialize(appInstance, name = 'messageBus', SubscriberArg = '') {
   if (!QUnit) { return; }
 
-  const Subscriber = Ember.isPresent(SubscriberArg) ? SubscriberArg : Ember.Object.extend({ messageBus: Ember.inject.service('message-bus') });
+  const Subscriber = Ember.isPresent(SubscriberArg) ? SubscriberArg : Ember.Object.extend({
+    messageBus: Ember.inject.service('message-bus')
+  });
 
   appInstance.register('ember-message-bus:subscriber', Subscriber, { instantiate: false });
 
@@ -32,13 +34,7 @@ export function initialize(appInstance, name = 'messageBus', SubscriberArg = '')
         });
       };
 
-      appInstance.lookup('ember-message-bus:subscriber').extend({
-        init(...args) {
-          this._super(...args);
-
-          this.get(name).subscribe(trigger, this, this.triggerMethod);
-        },
-
+      const subscriber = appInstance.factoryFor('ember-message-bus:subscriber').create({
         triggerMethod(...args) {
           if (typeOf(expectedOrMessage) === 'string') {
             pushResult(true, true, true, expectedOrMessage);
@@ -50,19 +46,15 @@ export function initialize(appInstance, name = 'messageBus', SubscriberArg = '')
             pushResult(result, args, expectedOrMessage, onlyMessage);
           }
         }
-      }).create();
+      });
+
+      subscriber.get(name).subscribe(trigger, subscriber, subscriber.triggerMethod);
     },
 
     willNotPublish: function(trigger, message) {
       const context = this;
 
-      appInstance.lookup('ember-message-bus:subscriber').extend({
-        init(...args) {
-          this._super(...args);
-
-          this.get(name).subscribe(trigger, this, this.triggerMethod);
-        },
-
+      const subscriber = appInstance.factoryFor('ember-message-bus:subscriber').create({
         triggerMethod() {
           context.pushResult({
             result: false,
@@ -71,7 +63,9 @@ export function initialize(appInstance, name = 'messageBus', SubscriberArg = '')
             message
           });
         }
-      }).create();
+      });
+
+      subscriber.get(name).subscribe(trigger, subscriber, subscriber.triggerMethod);
     }
   });
 }
