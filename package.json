@@ -11,7 +11,7 @@
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/null-null-null/ember-message-bus",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
