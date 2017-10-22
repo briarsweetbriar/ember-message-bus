@@ -1,5 +1,5 @@
 [![npm version](https://badge.fury.io/js/ember-message-bus.svg)](https://badge.fury.io/js/ember-message-bus)
-[![Build Status](https://travis-ci.org/null-null-null/ember-message-bus.svg?branch=master)](https://travis-ci.org/null-null-null/ember-message-bus)
+[![Build Status](https://travis-ci.org/patience-tema-baron/ember-message-bus.svg?branch=master)](https://travis-ci.org/patience-tema-baron/ember-message-bus)
 
 # ember-message-bus
 
